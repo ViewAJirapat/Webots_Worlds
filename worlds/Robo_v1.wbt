@@ -1,0 +1,42 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.3286283114919801 0.6649901908588798 -0.6706649528247326 0.8681602276931274
+  position -365.5255920530695 286.03649154847113 235.59906341095723
+  near 0.1
+}
+DirectionalLight {
+  direction 0 -1 0
+  intensity 2
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Pose {
+  rotation 1 0 0 -1.5708
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "GOOGLE_SAT_WM.png"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "PSU_Reservoir.obj"
+        ]
+        ccw FALSE
+      }
+    }
+  ]
+}
