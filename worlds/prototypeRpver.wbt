@@ -4,12 +4,13 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/Floor.proto"
 EXTERNPROTO "../protos/FourWheelRobot.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/animals/protos/Cat.proto"
 
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.08894209324653454 0.510840535398346 0.8550621330890849 0.7015928323859058
-  position -2.0328313506197775 -1.63545932250321 1.4158471720307864
+  orientation 0.059531035438969475 0.856274506710099 -0.5130789656358377 0.5294802943007646
+  position -2.144235590297543 0.9956261770801039 1.277968145626006
 }
 TexturedBackground {
 }
@@ -17,14 +18,27 @@ TexturedBackgroundLight {
 }
 Floor {
 }
+Cat {
+  translation 0 0.85 0
+}
 FourWheelRobot {
-  hidden position_0_0 -2.4632007508299943e-18
-  hidden position2_0_0 1.418440575929168e-14
-  hidden position_0_1 -2.13859215711238e-18
-  hidden position2_0_1 1.4182928778273678e-14
-  hidden position_0_2 6.152360311733971e-11
-  hidden position_0_3 6.152322608621243e-11
-  translation -1.2013261785536494e-08 -3.0604026899053637e-13 0.11172083239369011
-  rotation -1.2151582066679775e-07 -0.9999999999999927 3.5173646964887996e-09 1.0719510720459311e-07
-  controller "<none>"
+  hidden position_0_0 2.2882545185357777e-17
+  hidden position2_0_0 3.251795851475398e-14
+  hidden position_0_1 2.2422245407783993e-17
+  hidden position2_0_1 3.283167491123499e-14
+  hidden position_0_2 6.152553344292541e-11
+  hidden position_0_3 6.152385812289706e-11
+  hidden linearVelocity_0 1.6078121059732217e-16 2.0115458320691288e-17 5.684341886080802e-17
+  hidden angularVelocity_0 5.286588939092765e-16 -4.036219090708262e-15 -6.268727457042099e-16
+  hidden linearVelocity_3 -7.90476347962844e-17 -2.3190739636764463e-17 -1.158023286415258e-16
+  hidden angularVelocity_3 1.4311965487745683e-16 -9.44924210468323e-16 -2.683126211659989e-16
+  hidden linearVelocity_4 8.012439184740666e-17 1.2503796428115037e-17 -1.158027071391386e-16
+  hidden angularVelocity_4 1.0483795058531341e-17 1.8898484210531688e-15 -2.814830945635016e-16
+  hidden linearVelocity_5 5.810490721830036e-17 -1.6244566366992975e-17 -3.8604173837928965e-17
+  hidden angularVelocity_5 1.002315324681606e-16 -6.092489009496571e-26 -2.7966701084868596e-16
+  hidden linearVelocity_6 1.5878382499087496e-16 1.0465300012266059e-17 3.860075461403919e-17
+  hidden angularVelocity_6 9.525440111891568e-18 2.834772631726174e-15 -2.785636753173765e-16
+  translation -1.2022740067757823e-08 -3.0738611827487364e-13 0.11172201930088271
+  rotation 4.7451154860309754e-11 -1 4.03285260838161e-09 1.0721188011664567e-07
+  controller "rover_controller"
 }

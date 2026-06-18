@@ -53,7 +53,7 @@ Robot {
     }
     Transform {
       translation 0 0.275 0.3975
-      rotation 1 0 0 0.523599
+      rotation 1 0 0 -0.523599
       children [
         DEF D435_VISUAL Shape {
           appearance PBRAppearance {
@@ -67,14 +67,14 @@ Robot {
         }
         Camera {
           name "d435_rgb"
-          rotation 1 0 0 1.5708
+          rotation 0 0 1 1.5708
           width 640
           height 480
           fieldOfView 1.2
         }
         RangeFinder {
           name "d435_depth"
-          rotation 1 0 0 1.5708
+          rotation 0 0 1 1.5708
           width 640
           height 480
           fieldOfView 1.5
@@ -109,7 +109,7 @@ Robot {
         translation 0.17 0.28 -0.05
         children [
           DEF WHEEL Transform {
-            rotation 0 1 0 1.5708
+            rotation 0 1 0 1.5708   # <--- จุดนี้คือตัวแก้ให้ล้อตั้งตรงขึ้นมาครับ
             children [
               Shape {
                 appearance PBRAppearance {
