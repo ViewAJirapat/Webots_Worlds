@@ -1,0 +1,23 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "../protos/FourWheelRobot.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.07605386309280573 0.9280926931391879 -0.3644993317556427 0.4488049942184709
+  position -1.568709577184754 0.11809156767730374 1.045930123166066
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+FourWheelRobot {
+  translation 0 -0.15 0.31
+  rotation 1 0 0 1.5708
+}

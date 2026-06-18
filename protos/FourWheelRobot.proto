@@ -1,0 +1,149 @@
+#VRML_SIM R2025a utf8
+
+PROTO FourWheelRobot [
+  field SFVec3f    translation  0 0 0
+  field SFRotation rotation     0 1 0 0
+]
+{
+Robot {
+  translation IS translation
+  rotation IS rotation
+  children [
+    DEF BODY Shape {
+      appearance PBRAppearance {
+        baseColor 0.917647 0.145098 0.145098
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.26 0.13 0.74
+      }
+    }
+    # จุดที่เพิ่มเติม: กล่องสี่เหลี่ยมด้านบนตรงกลางรถ (กว้าง 0.26 ม., สูง 0.32 ม., ยาว 0.24 ม.)
+    Transform {
+      translation 0 0.225 0
+      children [
+        DEF TOP_BOX Shape {
+          appearance PBRAppearance {
+            baseColor 0.2 0.2 0.2  # ปรับเป็นสีเทาเข้มเพื่อให้ตัดกับตัวรถ
+            roughness 0.8
+            metalness 0.2
+          }
+          geometry Box {
+            size 0.26 0.32 0.24
+          }
+        }
+      ]
+    }
+    DEF WHEEL1 HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 1 0 0
+        anchor 0.17 -0.05 0.28
+      }
+      device [
+        RotationalMotor {
+          name "wheel1"
+        }
+      ]
+      endPoint Solid {
+        translation 0.17 -0.05 0.28
+        rotation 1 0 0 0
+        children [
+          DEF WHEEL Transform {
+            rotation 0 1 0 1.5708
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 0.305882 0.898039 0.25098
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.06
+                  radius 0.0625  
+                  subdivision 24
+                }
+              }
+            ]
+          }
+        ]
+        name "solid(0)"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    DEF WHEEL2 HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 1 0 0
+        anchor -0.17 -0.05 0.28
+      }
+      device [
+        RotationalMotor {
+          name "wheel2"
+        }
+      ]
+      endPoint Solid {
+        translation -0.17 -0.05 0.28
+        rotation 1 0 0 0
+        children [
+          USE WHEEL
+        ]
+        name "solid(1)"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    DEF WHEEL3 HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 1 0 0
+        anchor 0.17 -0.05 -0.28
+      }
+      device [
+        RotationalMotor {
+          name "wheel3"
+        }
+      ]
+      endPoint Solid {
+        translation 0.17 -0.05 -0.28
+        rotation 1 0 0 0
+        children [
+          USE WHEEL
+        ]
+        name "solid(2)"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+    DEF WHEEL4 HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 1 0 0
+        anchor -0.17 -0.05 -0.28
+      }
+      device [
+        RotationalMotor {
+          name "wheel4"
+        }
+      ]
+      endPoint Solid {
+        translation -0.17 -0.05 -0.28
+        rotation 1 0 0 0
+        children [
+          USE WHEEL
+        ]
+        name "solid(3)"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+      }
+    }
+  ]
+  boundingObject USE BODY
+  physics Physics {
+    density -1
+    mass 1
+  }
+}
+}
