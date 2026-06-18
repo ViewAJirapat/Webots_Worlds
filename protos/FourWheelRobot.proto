@@ -3,11 +3,13 @@
 PROTO FourWheelRobot [
   field SFVec3f    translation  0 0 0
   field SFRotation rotation     0 1 0 0
+  field SFString   controller   "<generic>"
 ]
 {
 Robot {
   translation IS translation
   rotation IS rotation
+  controller IS controller
   children [
     DEF BODY Shape {
       appearance PBRAppearance {
@@ -19,13 +21,12 @@ Robot {
         size 0.26 0.13 0.74
       }
     }
-    # จุดที่เพิ่มเติม: กล่องสี่เหลี่ยมด้านบนตรงกลางรถ (กว้าง 0.26 ม., สูง 0.32 ม., ยาว 0.24 ม.)
     Transform {
-      translation 0 0.225 0
+      translation 0 0.225 0.115
       children [
         DEF TOP_BOX Shape {
           appearance PBRAppearance {
-            baseColor 0.2 0.2 0.2  # ปรับเป็นสีเทาเข้มเพื่อให้ตัดกับตัวรถ
+            baseColor 0.2 0.2 0.2 
             roughness 0.8
             metalness 0.2
           }
@@ -35,14 +36,73 @@ Robot {
         }
       ]
     }
-    DEF WHEEL1 HingeJoint {
+    Transform {
+      translation 0 0.3975 0.245
+      children [
+        DEF CAMERA_MOUNT Shape {
+          appearance PBRAppearance {
+            baseColor 0.15 0.15 0.15 
+            roughness 0.9
+            metalness 0.1
+          }
+          geometry Box {
+            size 0.04 0.025 0.06  
+          }
+        }
+      ]
+    }
+    Transform {
+      translation 0 0.3975 0.275
+      rotation 1 0 0 0.523599
+      children [
+        DEF D435_VISUAL Shape {
+          appearance PBRAppearance {
+            baseColor 0.7 0.7 0.7 
+            roughness 0.4
+            metalness 0.6
+          }
+          geometry Box {
+            size 0.09 0.025 0.025
+          }
+        }
+        Camera {
+          name "d435_rgb"
+          rotation 0 1 0 -1.5708
+          width 640
+          height 480
+          fieldOfView 1.2
+        }
+        RangeFinder {
+          name "d435_depth"
+          rotation 0 1 0 -1.5708
+          width 640
+          height 480
+          fieldOfView 1.5
+          minRange 0.2
+          maxRange 10
+        }
+      ]
+    }
+    
+    # ---------------- ล้อหน้าขวา (ปรับเป็น Hinge2Joint) ----------------
+    DEF WHEEL1 Hinge2Joint {
       jointParameters HingeJointParameters {
-        axis 1 0 0
+        axis 0 1 0               # แกนที่ 1 (Y): แกนบังคับเลี้ยว
         anchor 0.17 -0.05 0.28
+      }
+      jointParameters2 JointParameters {
+        axis 1 0 0               # แกนที่ 2 (X): แกนล้อขับเคลื่อน
       }
       device [
         RotationalMotor {
-          name "wheel1"
+          name "steer1"          # ชื่อมอเตอร์สำหรับเลี้ยวหน้าขวา
+          minPosition -0.785     # ล็อกองศาเลี้ยวสูงสุด ~45 องศา
+          maxPosition 0.785
+        }
+      ]
+      device2 [
+        RotationalMotor {
+          name "wheel1"          # ชื่อมอเตอร์ขับเคลื่อนหน้าขวา
         }
       ]
       endPoint Solid {
@@ -73,14 +133,26 @@ Robot {
         }
       }
     }
-    DEF WHEEL2 HingeJoint {
+    
+    # ---------------- ล้อหน้าซ้าย (ปรับเป็น Hinge2Joint) ----------------
+    DEF WHEEL2 Hinge2Joint {
       jointParameters HingeJointParameters {
-        axis 1 0 0
+        axis 0 1 0               # แกนบังคับเลี้ยว
         anchor -0.17 -0.05 0.28
+      }
+      jointParameters2 JointParameters {
+        axis 1 0 0               # แกนขับเคลื่อน
       }
       device [
         RotationalMotor {
-          name "wheel2"
+          name "steer2"          # ชื่อมอเตอร์สำหรับเลี้ยวหน้าซ้าย
+          minPosition -0.785
+          maxPosition 0.785
+        }
+      ]
+      device2 [
+        RotationalMotor {
+          name "wheel2"          # ชื่อมอเตอร์ขับเคลื่อนหน้าซ้าย
         }
       ]
       endPoint Solid {
@@ -95,6 +167,8 @@ Robot {
         }
       }
     }
+    
+    # ---------------- ล้อหลังขวา (คงเดิม เป็นแค่ล้อตาม/ขับตรง) ----------------
     DEF WHEEL3 HingeJoint {
       jointParameters HingeJointParameters {
         axis 1 0 0
@@ -117,6 +191,8 @@ Robot {
         }
       }
     }
+    
+    # ---------------- ล้อหลังซ้าย (คงเดิม) ----------------
     DEF WHEEL4 HingeJoint {
       jointParameters HingeJointParameters {
         axis 1 0 0

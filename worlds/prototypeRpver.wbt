@@ -8,8 +8,8 @@ EXTERNPROTO "../protos/FourWheelRobot.proto"
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.07605386309280573 0.9280926931391879 -0.3644993317556427 0.4488049942184709
-  position -1.568709577184754 0.11809156767730374 1.045930123166066
+  orientation -0.1254027578903191 0.49247907721153755 0.8612424204731061 0.6903021256193024
+  position -1.5509770887556757 -1.2303149280804895 1.1417756220207351
 }
 TexturedBackground {
 }
@@ -18,6 +18,7 @@ TexturedBackgroundLight {
 Floor {
 }
 FourWheelRobot {
-  translation 0 -0.15 0.31
+  translation 0 0 0.2
   rotation 1 0 0 1.5708
+  controller "rover_controller"
 }
