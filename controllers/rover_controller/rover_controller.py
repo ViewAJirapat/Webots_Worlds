@@ -1,6 +1,7 @@
 from controller import Robot, Keyboard
 import cv2
 import numpy as np
+import sensor_noise
 
 # 1. เริ่มต้นการเชื่อมต่อ
 robot = Robot()
@@ -19,9 +20,17 @@ for name in ['wheel1', 'wheel2', 'wheel3', 'wheel4']:
     motor.setVelocity(0.0)
     wheels.append(motor)
 
-# เปิดใช้งานกล้อง RGB
-rgb_cam = robot.getDevice('d435_rgb')
+# เปิดใช้งานกล้อง RGB และ Depth
+rgb_cam = robot.getDevice('d415_rgb')
 rgb_cam.enable(TIME_STEP)
+
+depth_cam = robot.getDevice('d415_depth')
+depth_cam.enable(TIME_STEP)
+
+# เปิดใช้งาน Light Sensor สำหรับเช็คแสงอาทิตย์
+light_sensor = robot.getDevice('sunlight_sensor')
+if light_sensor is not None:
+    light_sensor.enable(TIME_STEP)
 
 MAX_SPEED = 6.0
 MAX_STEER = 0.5
@@ -54,13 +63,45 @@ while robot.step(TIME_STEP) != -1:
     steer_left.setPosition(target_steer)
 
     # ==========================================
-    # ส่วนแสดงภาพจากกล้อง
+    # ส่วนแสดงภาพจากกล้อง RGB และ Depth
     # ==========================================
-    raw_image = rgb_cam.getImage()
-    if raw_image is not None:
-        # แปลงข้อมูลภาพดิบให้เป็น Numpy Array 3 มิติ เพื่อให้ OpenCV อ่านได้
-        image = np.frombuffer(raw_image, np.uint8).reshape((rgb_cam.getHeight(), rgb_cam.getWidth(), 4))
+    raw_rgb = rgb_cam.getImage()
+    
+    # ดึงค่า depth
+    # Webots RangeFinder จะให้ข้อมูลแบบ float array กลับมา
+    raw_depth = depth_cam.getRangeImage()
+    
+    if raw_rgb is not None and raw_depth is not None:
+        # 1. แสดงผล RGB
+        image_rgb = np.frombuffer(raw_rgb, np.uint8).reshape((rgb_cam.getHeight(), rgb_cam.getWidth(), 4))
+        
+        # 2. แสดงผล Depth (RangeFinder)
+        # ลองใช้ frombuffer ก่อนเพื่อความเร็ว ถ้าไม่ได้ให้ใช้ np.array ธรรมดา (รองรับ Webots ทุกเวอร์ชัน)
+        try:
+            image_depth = np.frombuffer(raw_depth, dtype=np.float32).reshape((depth_cam.getHeight(), depth_cam.getWidth()))
+        except (AttributeError, TypeError):
+            image_depth = np.array(raw_depth, dtype=np.float32).reshape((depth_cam.getHeight(), depth_cam.getWidth()))
+        
+        # จัดการค่าอนันต์ (inf) กรณีที่มองไม่เห็นวัตถุ (อยู่ไกลกว่า maxRange)
+        max_range = depth_cam.getMaxRange()
+        image_depth = np.nan_to_num(image_depth, posinf=max_range, neginf=0.0)
+        
+        # === เพิ่ม Noise จำลองแสงแดดกวนเซ็นเซอร์ IR ===
+        if light_sensor is not None:
+            light_val = light_sensor.getValue()
+            image_depth = sensor_noise.apply_sunlight_interference(
+                image_depth, light_val, max_range, threshold=800, max_light=2500
+            )
+        # ===============================================
+        
+        # Normalize ข้อมูล Depth ให้เป็นช่วง 0-255 เพื่อการมองเห็น (ภาพขาวดำ)
+        depth_normalized = np.clip((image_depth / max_range) * 255, 0, 255).astype(np.uint8)
+        
+        # นำมาใส่ Color Map จะทำให้ดูค่าความลึกง่ายขึ้น (ใกล้จะร้อน(แดง) ไกลจะเย็น(น้ำเงิน))
+        # ต้องกลับค่าก่อนเพื่อให้ของที่ใกล้กว่า (ค่าน้อย) มีสีโทนร้อน
+        depth_colormap = cv2.applyColorMap(255 - depth_normalized, cv2.COLORMAP_JET)
         
         # แสดงหน้าต่างวิดีโอ
-        cv2.imshow("Almondmatcha - D435 RGB Feed", image)
+        cv2.imshow("RealSense D415 - RGB", image_rgb)
+        cv2.imshow("RealSense D415 - Depth", depth_colormap)
         cv2.waitKey(1)

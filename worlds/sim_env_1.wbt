@@ -7,6 +7,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/buildings/protos/SimpleBuilding.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/road/protos/RoadLine.proto"
 EXTERNPROTO "../protos/FourWheelRobot.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/computers/protos/DesktopComputer.proto"
 
 WorldInfo {
   info [
@@ -18,13 +19,19 @@ WorldInfo {
   lineScale 2
 }
 Viewpoint {
-  orientation 0.16489967369680433 -0.28453954845521995 -0.9443756365872571 5.098077670523997
-  position -180.68499242856416 -0.18918020444665157 1.9897768029438112
+  orientation 0.1806871319656335 -0.4485202204354975 -0.875318097723637 5.459212492590192
+  position -181.7636686852347 2.1309880830573986 2.130295390970729
   near 3
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
+}
+DirectionalLight {
+  ambientIntensity 0.3
+  direction 1 -0.5 -0.5
+  intensity 3.5
+  castShadows TRUE
 }
 Floor {
   translation 0 0 -0.02
@@ -64,6 +71,10 @@ Road {
     "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/road/protos/textures/road_line_triangle.png"
   ]
   splineSubdivision 0
+}
+DesktopComputer {
+  translation -177.786 5.6715 0.05
+  rotation -9.903249999479509e-06 -2.6535699998605342e-06 0.9999999999474423 -0.523595307179586
 }
 SimpleBuilding {
   translation -207.16 190.68 0
@@ -114,8 +125,6 @@ DEF water Pose {
   ]
 }
 FourWheelRobot {
-  hidden linearVelocity_0 -2.2195752473261259e-13 -9.773663497406718e-15 5.684341886080802e-17
-  hidden angularVelocity_0 4.2048665405045717e-16 3.033699866792066e-15 -6.56680841772195e-14
   translation -178.33040088798046 4.617562931442323 0.09172201930126873
   rotation 8.942399493220754e-09 3.466840680869377e-08 -0.9999999999999994 0.5048721500411332
   controller "rover_controller"

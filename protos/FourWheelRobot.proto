@@ -55,7 +55,7 @@ Robot {
       translation 0 0.275 0.3975
       rotation 1 0 0 -0.523599
       children [
-        DEF D435_VISUAL Shape {
+        DEF D415_VISUAL Shape {
           appearance PBRAppearance {
             baseColor 0.7 0.7 0.7 
             roughness 0.4
@@ -66,20 +66,24 @@ Robot {
           }
         }
         Camera {
-          name "d435_rgb"
+          name "d415_rgb"
           rotation 0 0 1 1.5708
           width 640
           height 480
-          fieldOfView 1.2
+          fieldOfView 1.204  # ~69 degrees horizontally for D415
         }
         RangeFinder {
-          name "d435_depth"
+          name "d415_depth"
           rotation 0 0 1 1.5708
           width 640
           height 480
-          fieldOfView 1.5
-          minRange 0.2
+          fieldOfView 1.134  # ~65 degrees horizontally for D415
+          minRange 0.3       # D415 optimal min range is around 0.3m
           maxRange 10
+        }
+        LightSensor {
+          name "sunlight_sensor"
+          rotation 0 0 1 1.5708
         }
       ]
     }
