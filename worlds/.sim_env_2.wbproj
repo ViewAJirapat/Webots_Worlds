@@ -7,5 +7,5 @@ centralWidgetVisible: 1
 orthographicViewHeight: 1
 textFiles: -1
 consoles: Console:All:All
-renderingDevicePerspectives: robot:d435_depth;1;0.895833;0;0
-renderingDevicePerspectives: robot:d435_rgb;1;0.895833;0;0
+renderingDevicePerspectives: robot:d415_depth;0;0.895833;0;0
+renderingDevicePerspectives: robot:d415_rgb;0;0.895833;0;0
