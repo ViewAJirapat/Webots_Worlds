@@ -1,0 +1,43 @@
+# คู่มือแก้ไขปัญหาการเชื่อมต่อ ROS 2 (WSL2) กับ Webots (Windows)
+
+เอกสารฉบับนี้สรุปปัญหาและขั้นตอนการแก้ไข (Troubleshooting) กรณีที่ ROS 2 Driver ใน WSL2 (Linux) ไม่สามารถเชื่อมต่อกับ Webots Simulator ที่รันอยู่บนฝั่ง Windows Host ได้
+
+---
+
+## 1. ปัญหาหลักที่พบ (Root Causes)
+
+1. **File Path Conflict:** การใช้ `ros2 launch` ผ่าน `/mnt/d/` ทำให้เกิดปัญหาการจัดการ Permission ระหว่างระบบปฏิบัติการ
+2. **Network Isolation:** ระบบเครือข่ายของ WSL2 และ Windows ถูกแยกออกจากกัน (แม้จะอยู่บนเครื่องเดียวกัน) ทำให้ ROS 2 หา Webots ไม่เจอ
+3. **Hardcoded Port Mismatch:**
+   * ตัวแปรในโค้ดของ `webots_ros2_driver` บังคับให้หาพอร์ต **1234** เป็นค่าเริ่มต้น
+   * Webots มักจะจัดสรรพอร์ตอัตโนมัติ (เช่น **1235**) ทำให้พอร์ตไม่ตรงกัน
+4. **Parameter Missing:** ขาดการตั้งค่า `update_rate` ใน `ros2_control` ทำให้ Hardware Interface พัง (Aborted) ทันทีที่เชื่อมต่อได้
+5. **Daemon Timeout:** ROS 2 Daemon ทำงานผิดพลาดในเครือข่ายของ WSL2 ทำให้คำสั่ง CLI (เช่น `ros2 topic list`) ค้าง
+
+---
+
+## 2. ขั้นตอนการตั้งค่าที่ถูกต้อง (Step-by-Step Setup)
+
+เพื่อความเสถียร แนะนำให้เปลี่ยนมาใช้การรันแบบ **Manual Setup** (แยกการเปิด Webots และ ROS 2 ออกจากกัน)
+
+### A. การตั้งค่าฝั่ง Webots (บน Windows)
+1. เปิดโปรแกรม Webots และโหลดไฟล์ World ของหุ่นยนต์ (เช่น Tiago)
+2. ในหน้าต่าง **Scene Tree** ให้คลิกที่โหนด `Robot`
+3. เปลี่ยนฟิลด์ `controller` ให้เป็น `"<extern>"`
+4. กด **Save** World และกดปุ่ม **Play** เพื่อรัน Simulation ทิ้งไว้
+
+### B. การเตรียม Network Bridge (บน Windows)
+เพื่อแก้ปัญหาพอร์ตไม่ตรงกัน (Driver หา 1234 แต่ Webots เปิด 1235) เราจะสร้าง Port Proxy:
+1. เปิด **Windows PowerShell** ในฐานะ **Administrator**
+2. รันคำสั่งสร้างทางเชื่อมพอร์ต:
+   ```powershell
+   netsh interface portproxy add v4tov4 listenport=1234 listenaddress=127.0.0.1 connectport=1235 connectaddress=127.0.0.1
+
+### C. การรัน ROS 2 Driver (บน WSL2)
+
+เปิด Terminal ใน WSL2 และรันคำสั่งโดยระบุ Parameter ให้ครบถ้วน:
+
+```bash
+ros2 run webots_ros2_driver driver --ros-args \
+-p robot_description:='/mnt/d/ros2_ws/install/webots_ros2_tiago/share/webots_ros2_tiago/resource/tiago_webots.urdf' \
+-p update_rate:=50
